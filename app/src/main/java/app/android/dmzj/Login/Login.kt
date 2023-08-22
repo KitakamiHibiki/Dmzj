@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.android.dmzj.R
+import app.android.dmzj.Service.GetUserInfo
 import app.android.dmzj.Service.LoginCommit
 import app.android.dmzj.ui.theme.DmzjTheme
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -83,7 +84,13 @@ class Login : AppCompatActivity() {
         DmzjTheme {
             Box {
                 Image(
-                    painter = painterResource(id = baseContext.resources.getIdentifier("m_"+randomBackgroundString+"_aos","drawable",packageName)),
+                    painter = painterResource(
+                        id = baseContext.resources.getIdentifier(
+                            "m_" + randomBackgroundString + "_aos",
+                            "drawable",
+                            packageName
+                        )
+                    ),
 //                    painter = painterResource(id = R.drawable.m_01_aos),
                     contentDescription = null,
                     contentScale = ContentScale.Crop
@@ -167,15 +174,16 @@ class Login : AppCompatActivity() {
                                         .create<String> { emitter ->
                                             run {
                                                 try {
+                                                    //获取基本内容: nickname,password,uid
                                                     val result: String =
                                                         LoginCommit(userName, password)
                                                     val json = JSONObject(result)
                                                     if (result.contains("error")) {
                                                         throw Exception(json.getString("error"))
                                                     } else {
-                                                        val file =
+                                                        var file =
                                                             File(filesDir.path + "/User.json")
-                                                        val fOut = FileOutputStream(file)
+                                                        var fOut = FileOutputStream(file)
                                                         json.put("nickname", userName)
                                                         json.put("password", password)
                                                         fOut.write(
@@ -183,6 +191,26 @@ class Login : AppCompatActivity() {
                                                                 .toString()
                                                                 .toByteArray()
                                                         )
+                                                        fOut.close()
+                                                        //获取用户具体信息
+                                                        val jo = JSONObject(GetUserInfo(this@Login))
+
+                                                        json.put(
+                                                            "userName",
+                                                            jo.getString("nickname")
+                                                        )
+                                                        json.put(
+                                                            "photo",
+                                                            jo.getString("cover")
+                                                        )
+                                                        json.put("description",jo.getString("description"))
+                                                        fOut = FileOutputStream(file)
+                                                        fOut.write(
+                                                            json
+                                                                .toString()
+                                                                .toByteArray()
+                                                        )
+                                                        fOut.close()
                                                         emitter.onNext("1")
                                                     }
                                                 } catch (Ex: Exception) {
@@ -196,6 +224,7 @@ class Login : AppCompatActivity() {
                                             if (t.equals("1"))
                                                 finish()
                                         }, {
+                                            it.printStackTrace()
                                             Toast
                                                 .makeText(
                                                     baseContext,

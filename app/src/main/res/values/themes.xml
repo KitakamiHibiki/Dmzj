@@ -4,9 +4,9 @@
     <style name="Theme.Dmzj" parent="@style/Theme.AppCompat.Light.NoActionBar" >
 
         <item name="android:navigationBarColor">@android:color/white</item>
-        <item name="android:statusBarColor">@android:color/holo_purple</item>
+        <item name="android:statusBarColor">#F9F9F9</item>
 
-        <item name="android:windowBackground">#FFDCDCDC</item>
+        <item name="android:windowBackground">#F9F9F9</item>
     </style>
 
 </resources>
