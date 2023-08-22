@@ -9,8 +9,8 @@ import java.util.HashMap
 fun LoginCommit(nickname: String, password: String): String {
     val HM = HashMap<String, String>()
     HM["nickname"] = nickname
-    HM["password"] = password
-    return Tools.getContent("http://192.168.1.225:8880/Comic/login", HM)
+    HM["pwd"] = password
+    return Tools.getContent("http://192.168.1.225:8880/Comic/Login", HM)
 }
 
 fun GetUserInfo(context: Context):String{

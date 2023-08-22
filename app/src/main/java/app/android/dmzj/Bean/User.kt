@@ -9,10 +9,11 @@ class User(context: Context) {
     val nickname: String
     val password: String
     val uid: String
-    val cookie: String
+    val cookie_val: String
+    val dmzj_token: String
     var userName: String = ""
     var photo: String = ""
-    var description:String=""
+    var description: String = ""
 
     init {
         val fIn = FileInputStream(context.filesDir.path + "/User.json")
@@ -27,11 +28,12 @@ class User(context: Context) {
         nickname = json.getString("nickname")
         password = json.getString("password")
         uid = json.getString("uid")
-        cookie = json.getString("cookie")
+        cookie_val = json.getString("cookie_val")
+        dmzj_token = json.getString("dmzj_token")
         try {
             userName = json.getString("userName")
             photo = json.getString("photo")
-            description=json.getString("description")
+            description = json.getString("description")
         } catch (ex: Exception) {
             ex.printStackTrace()
         }

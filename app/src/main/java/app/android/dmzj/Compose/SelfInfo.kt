@@ -108,7 +108,6 @@ class SelfInfo(Context: Activity) {
             }
 
         }
-
     }
 
     @Composable
@@ -120,11 +119,6 @@ class SelfInfo(Context: Activity) {
             //我的漫画订阅
             MessageCard(R.drawable.baseline_favorite_border_24, "我的漫画订阅") {
                 println("我的漫画订阅")
-                Thread {
-                    val HM = HashMap<String, String>()
-                    HM["Cookie"] = user.cookie
-                    println(Tools.getContent("http://192.168.1.225:8880/Comic/myLoveManga", HM))
-                }.start()
             }
             //我的小说订阅
             MessageCard(
