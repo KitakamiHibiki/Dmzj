@@ -1,4 +1,4 @@
-package app.android.dmzj.Main
+package app.android.dmzj.Activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,8 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.android.dmzj.Compose.Index
-import app.android.dmzj.Compose.SelfInfo
+import app.android.dmzj.Activity.Comic.ComicIndex
+import app.android.dmzj.Activity.MyInfo.SelfInfo
 import app.android.dmzj.R
 
 class Main : AppCompatActivity() {
@@ -41,7 +41,7 @@ class Main : AppCompatActivity() {
         Column {
             Row(modifier = Modifier.weight(1f)) {
                 if (menuSelect == 1) {
-                    Index().MainCompose()
+                    ComicIndex().MainCompose()
                 } else if (menuSelect == 2) {
                     SelfInfo(this@Main).MainCompose()
 

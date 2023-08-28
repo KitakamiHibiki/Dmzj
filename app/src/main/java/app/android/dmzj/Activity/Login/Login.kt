@@ -1,8 +1,7 @@
-package app.android.dmzj.Login
+package app.android.dmzj.Activity.Login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -38,14 +37,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.android.dmzj.R
-import app.android.dmzj.Service.GetUserInfo
-import app.android.dmzj.Service.LoginCommit
+import app.android.dmzj.Request.GetUserInfo
+import app.android.dmzj.Request.LoginCommit
 import app.android.dmzj.ui.theme.DmzjTheme
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.functions.Action
-import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.json.JSONObject
 import java.io.File
@@ -203,7 +199,10 @@ class Login : AppCompatActivity() {
                                                             "photo",
                                                             jo.getString("cover")
                                                         )
-                                                        json.put("description",jo.getString("description"))
+                                                        json.put(
+                                                            "description",
+                                                            jo.getString("description")
+                                                        )
                                                         fOut = FileOutputStream(file)
                                                         fOut.write(
                                                             json
@@ -221,8 +220,10 @@ class Login : AppCompatActivity() {
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe({ t ->
-                                            if (t.equals("1"))
+                                            if (t.equals("1")) {
+                                                setResult(1)
                                                 finish()
+                                            }
                                         }, {
                                             it.printStackTrace()
                                             Toast

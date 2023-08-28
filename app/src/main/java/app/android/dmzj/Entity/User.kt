@@ -1,4 +1,4 @@
-package app.android.dmzj.Bean
+package app.android.dmzj.Entity
 
 import android.content.Context
 import org.json.JSONObject

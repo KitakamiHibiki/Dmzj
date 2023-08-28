@@ -1,12 +1,10 @@
 package app.android.dmzj
 
 import android.content.Intent
-import android.os.Bundle
 import androidx.activity.ComponentActivity
-import app.android.dmzj.Bean.User
-import app.android.dmzj.Login.Login
-import app.android.dmzj.Main.Main
-import app.android.dmzj.Tools.Tools
+import app.android.dmzj.Activity.Login.Login
+import app.android.dmzj.Activity.Main
+import app.android.dmzj.Request.User.getMyHeadImage
 import java.io.File
 
 class MainActivity : ComponentActivity() {
@@ -15,19 +13,20 @@ class MainActivity : ComponentActivity() {
         val loginFile = File(this.filesDir.path + "/User.json")
         if (!loginFile.exists() || loginFile.length() == 0L) {
             val intent = Intent(this, Login::class.java)
-            startActivity(intent)
+            startActivityForResult(intent,1)
         } else {
-            Thread {
-                //获取用户头像
-                val user = User(this)
-
-                val file =
-                    File(this.cacheDir.path + "/HeadImage.${user.photo.split(".")[user.photo.split(".").size - 1]}")
-                Tools.getFile(user.photo, file.path)
-            }.start()
+            getMyHeadImage(this)
             val intent = Intent(this, Main::class.java)
-            startActivity(intent)
+            startActivityForResult(intent,2)
         }
         super.onStart()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            1->{if(resultCode!=1)finish()}
+            2->{if(resultCode!=1)finish()}
+        }
     }
 }

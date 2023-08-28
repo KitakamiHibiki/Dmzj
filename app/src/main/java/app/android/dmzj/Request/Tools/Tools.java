@@ -1,4 +1,4 @@
-package app.android.dmzj.Tools;
+package app.android.dmzj.Request.Tools;
 
 import androidx.annotation.Nullable;
 
@@ -14,6 +14,8 @@ public class Tools {
     public static String getContent(String url, HashMap<String, String> HM) throws Exception {
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setConnectTimeout(3000);
+            conn.setReadTimeout(3000);
             conn.setDoInput(true);
             conn.setDoOutput(true);
             StringBuilder content = new StringBuilder();

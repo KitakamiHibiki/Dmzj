@@ -1,8 +1,8 @@
-package app.android.dmzj.Service
+package app.android.dmzj.Request
 
 import android.content.Context
-import app.android.dmzj.Bean.User
-import app.android.dmzj.Tools.Tools
+import app.android.dmzj.Entity.User
+import app.android.dmzj.Request.Tools.Tools
 import java.net.URLEncoder
 import java.util.HashMap
 
@@ -13,9 +13,9 @@ fun LoginCommit(nickname: String, password: String): String {
     return Tools.getContent("http://192.168.1.225:8880/Comic/Login", HM)
 }
 
-fun GetUserInfo(context: Context):String{
+fun GetUserInfo(context: Context): String {
     val user = User(context)
     val HM = HashMap<String, String>()
     HM["uid"] = URLEncoder.encode(user.uid)
-    return Tools.getContent("http://192.168.1.225:8880/Comic/userInfo",HM)
+    return Tools.getContent("http://192.168.1.225:8880/Comic/userInfo", HM)
 }

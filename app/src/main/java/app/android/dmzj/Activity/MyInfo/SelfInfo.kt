@@ -1,6 +1,7 @@
-package app.android.dmzj.Compose
+package app.android.dmzj.Activity.MyInfo
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,9 +27,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.android.dmzj.Bean.User
+import app.android.dmzj.Entity.User
 import app.android.dmzj.R
-import app.android.dmzj.Tools.Tools
 import java.io.File
 
 class SelfInfo(Context: Activity) {
@@ -95,6 +95,7 @@ class SelfInfo(Context: Activity) {
                             .clickable {
                                 val loginFile = File(context.filesDir.path + "/User.json")
                                 loginFile.delete()
+                                context.setResult(1)
                                 context.finish()
                             },
                         shape = CircleShape,
@@ -119,6 +120,8 @@ class SelfInfo(Context: Activity) {
             //我的漫画订阅
             MessageCard(R.drawable.baseline_favorite_border_24, "我的漫画订阅") {
                 println("我的漫画订阅")
+                val intent = Intent(context, MyComicSubscribe::class.java)
+                context.startActivity(intent)
             }
             //我的小说订阅
             MessageCard(
