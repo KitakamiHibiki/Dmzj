@@ -54,3 +54,9 @@ fun getAllComicSubscribe(
     }
     return JSONObject(result).getJSONArray("Result")
 }
+
+fun getAllNovelSubscribe(
+
+){
+
+}

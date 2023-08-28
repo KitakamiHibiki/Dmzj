@@ -2,6 +2,7 @@ package app.android.dmzj.Activity.MyInfo
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -55,9 +56,9 @@ class MyComicSubscribe : AppCompatActivity() {
     private var sub_type: String = "1"
     private var FirstJA: JSONArray = JSONArray()
     private var _data: Data = Data(FirstJA)
-    private val handle = Handler{msg->
-        when(msg.what){
-            ALL_CONTENT_IS_LOADED->{
+    private val handle = Handler { msg ->
+        when (msg.what) {
+            ALL_CONTENT_IS_LOADED -> {
                 Toast(this).let {
                     it.setText("已加载全部内容")
                     it.show()
@@ -78,41 +79,45 @@ class MyComicSubscribe : AppCompatActivity() {
         setContent {
             val scope = rememberCoroutineScope()
             val refreshState = RefreshState(scope,
-            refreshFunction = {
-                Thread {
-                    page="0"
-                    _data.content = getAllComicSubscribe(
-                        context = this,
-                        page = page,
-                        letter = letter,
-                        sub_type = sub_type
-                    )
-                }.start()
-            },
-            loadMoreFunction = {
-                Thread {
-                    page = "${page.toInt()+1}"
-                    val get = getAllComicSubscribe(
-                        context = this,
-                        page = page,
-                        letter = letter,
-                        sub_type = sub_type
-                    )
-                    for (a in 0 until get.length()){
-                        _data.content.put(get.get(a))
-                    }
-                    if(get.length()==0){
-                        handle.sendEmptyMessage(ALL_CONTENT_IS_LOADED)
-                        page = "${page.toInt()-1}"
-                    }
-                    _data.content = JSONArray(_data.content.toString())
-                }.start()
-            })
+                refreshFunction = {
+                    Thread {
+                        page = "0"
+                        _data.content = getAllComicSubscribe(
+                            context = this,
+                            page = page,
+                            letter = letter,
+                            sub_type = sub_type
+                        )
+                    }.start()
+                },
+                loadMoreFunction = {
+                    Thread {
+                        page = "${page.toInt() + 1}"
+                        val get = getAllComicSubscribe(
+                            context = this,
+                            page = page,
+                            letter = letter,
+                            sub_type = sub_type
+                        )
+                        for (a in 0 until get.length()) {
+                            _data.content.put(get.get(a))
+                        }
+                        if (get.length() == 0) {
+                            handle.sendEmptyMessage(ALL_CONTENT_IS_LOADED)
+                            page = "${page.toInt() - 1}"
+                        }
+                        _data.content = JSONArray(_data.content.toString())
+                    }.start()
+                })
             val scrollState = rememberScrollState()
-            val refreshNestedScrollConnection = RefreshNestedScrollConnection(scrollState = scrollState, state = refreshState)
+            val refreshNestedScrollConnection =
+                RefreshNestedScrollConnection(scrollState = scrollState, state = refreshState)
             Column {
                 Head()
-                Refresh(state = refreshState, nestedScrollConnection = refreshNestedScrollConnection) {
+                Refresh(
+                    state = refreshState,
+                    nestedScrollConnection = refreshNestedScrollConnection
+                ) {
                     Content(scrollState = scrollState, modifier = Modifier.fillMaxHeight())
                 }
             }
@@ -131,7 +136,9 @@ class MyComicSubscribe : AppCompatActivity() {
     //内容展示组件
     @Composable
     fun MessageCard(jo: JSONObject) {
+        //TODO: 添加MessageCard 点击事件，进入具体页面
         val cI = ComicSubscribeItem(jo, this)
+        Log.i("Show MCSI", jo.toString())
         Surface(
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
@@ -142,14 +149,50 @@ class MyComicSubscribe : AppCompatActivity() {
                 modifier = Modifier
                     .background(Color.White, RoundedCornerShape(8.dp))
             ) {
-                Image(
-                    bitmap = cI.imageBitmap,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(1.dp, 0.dp)
-                        .height(160.dp),
-                    contentScale = ContentScale.Crop
-                )
+                Box {
+                    Image(
+                        bitmap = cI.imageBitmap,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(1.dp, 0.dp)
+                            .height(160.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                    Column(modifier = Modifier.matchParentSize()) {
+                        if (cI.status == "已完结") {
+                            Row {
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text(
+                                    text = "已完结",
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .background(
+                                            Color(254, 87, 34),
+                                            RoundedCornerShape(2.dp)
+                                        )
+                                        .padding(2.dp),
+                                    fontSize = 13.sp
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        if (cI.status == "连载中") {
+                            Row {
+                                Text(
+                                    text = "连载中",
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .background(
+                                            Color(33, 150, 243),
+                                            RoundedCornerShape(2.dp)
+                                        )
+                                        .padding(2.dp),
+                                    fontSize = 13.sp
+                                )
+                            }
+                        }
+                    }
+                }
                 Text(
                     text = cI.name,
                     maxLines = 1,
@@ -171,7 +214,7 @@ class MyComicSubscribe : AppCompatActivity() {
 
     //使用内容展示组件，展示全部数据
     @Composable
-    fun Content(scrollState: ScrollState= rememberScrollState(), modifier: Modifier=Modifier) {
+    fun Content(scrollState: ScrollState = rememberScrollState(), modifier: Modifier = Modifier) {
         Column(modifier = modifier.verticalScroll(scrollState)) {
             for (a in 0 until _data.content.length() / 3) {
                 Row(modifier = Modifier.padding(10.dp, 5.dp)) {
