@@ -1,4 +1,4 @@
-package app.android.dmzj.Compose
+package app.android.dmzj.compose
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -27,7 +27,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class RefreshState(
@@ -95,21 +94,41 @@ class RefreshState(
         if (isRefresh) {
             if (topHeight.value >= 0.5 * topHeightMax) {
                 topHeight.animateTo(topHeightMax / 2)
-                refreshFunction()
+                Thread {
+                    refreshFunction()
+                    scope.launch {
+                        topHeight.animateTo(0f)
+                    }
+                    isRefresh = false
+                    isRunning = false
+                }.start()
+            } else {
+                topHeight.animateTo(0f)
+                isRefresh = false
+                isRunning = false
             }
-            topHeight.animateTo(0f)
-            isRefresh = false
-            isRunning = false
             return
         }
         if (isLoadMore) {
             if (bottomHeight.value >= 0.5 * bottomHeightMax) {
                 bottomHeight.animateTo(bottomHeightMax / 2)
-                loadMoreFunction()
+                Thread {
+                    try {
+                        loadMoreFunction()
+                    }catch (ex:Exception){
+                        ex.printStackTrace()
+                    }
+                    scope.launch {
+                        bottomHeight.animateTo(0f)
+                    }
+                    isLoadMore = false
+                    isRunning = false
+                }.start()
+            } else {
+                bottomHeight.animateTo(0f)
+                isLoadMore = false
+                isRunning = false
             }
-            bottomHeight.animateTo(0f)
-            isLoadMore = false
-            isRunning = false
             return
         }
         isLoadMore = false

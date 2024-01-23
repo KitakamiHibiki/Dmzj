@@ -1,9 +1,11 @@
-package app.android.dmzj.Activity.Login
+package app.android.dmzj.activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.os.Handler
+import android.os.Message
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,10 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -34,25 +33,33 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.android.dmzj.Request.GetUserInfo
-import app.android.dmzj.Request.LoginCommit
+import app.android.dmzj.service.UserService
 import app.android.dmzj.ui.theme.DmzjTheme
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import org.json.JSONObject
-import java.io.File
-import java.io.FileOutputStream
-import java.lang.Exception
 import java.util.Random
 
 class Login : AppCompatActivity() {
     private val randomBackgroundNumber: Int
     private val randomTool: Random = Random()
     private var randomBackgroundString: String = ""
+    private val SET_ERROR_MESSAGE=10001
+    private val LOGIN_SUCCSESS=10002
+    var userName = mutableStateOf("")
+    var password = mutableStateOf("")
+    var errorText = mutableStateOf("")
+    private val handler = Handler(Handler.Callback { message: Message ->
+        when(message.what){
+            SET_ERROR_MESSAGE->errorText.value=message.obj.toString()
+            LOGIN_SUCCSESS->{
+                val intent = Intent(this,Main::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        return@Callback true
+    })
+
 
     init {
         randomBackgroundNumber = randomTool.nextInt(35)
@@ -73,8 +80,6 @@ class Login : AppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Greeting() {
-        var userName by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
         val userNameScroll = rememberScrollState()
         val passwordScroll = rememberScrollState()
         DmzjTheme {
@@ -110,12 +115,13 @@ class Login : AppCompatActivity() {
                     Row {
                         Spacer(modifier = Modifier.weight(1f))
                         TextField(
-                            value = userName,
+                            value = userName.value,
                             label = { Text(text = "User_Name") },
                             onValueChange = {
-                                userName = it
-                                if (userName.contains("\n"))
-                                    userName = userName.substring(0, userName.length - 1)
+                                userName.value = it
+                                if (userName.value.contains("\n"))
+                                    userName.value =
+                                        userName.value.substring(0, userName.value.length - 1)
                             },
                             maxLines = 1,
                             modifier = Modifier
@@ -134,13 +140,14 @@ class Login : AppCompatActivity() {
                     Row {
                         Spacer(modifier = Modifier.weight(1f))
                         TextField(
-                            value = password,
+                            value = password.value,
                             label = { Text(text = "Password") },
                             visualTransformation = PasswordVisualTransformation(),
                             onValueChange = {
-                                password = it
-                                if (password.contains("\n"))
-                                    password = password.substring(0, password.length - 1)
+                                password.value = it
+                                if (password.value.contains("\n"))
+                                    password.value =
+                                        password.value.substring(0, password.value.length - 1)
                             },
                             maxLines = 1,
                             modifier = Modifier
@@ -166,76 +173,10 @@ class Login : AppCompatActivity() {
                                 .height(40.dp)
                                 .width(100.dp)
                                 .clickable {
-                                    val a = Observable
-                                        .create<String> { emitter ->
-                                            run {
-                                                try {
-                                                    //获取基本内容: nickname,password,uid
-                                                    val result: String =
-                                                        LoginCommit(userName, password)
-                                                    val json = JSONObject(result)
-                                                    if (result.contains("error")) {
-                                                        throw Exception(json.getString("error"))
-                                                    } else {
-                                                        var file =
-                                                            File(filesDir.path + "/User.json")
-                                                        var fOut = FileOutputStream(file)
-                                                        json.put("nickname", userName)
-                                                        json.put("password", password)
-                                                        fOut.write(
-                                                            json
-                                                                .toString()
-                                                                .toByteArray()
-                                                        )
-                                                        fOut.close()
-                                                        //获取用户具体信息
-                                                        val jo = JSONObject(GetUserInfo(this@Login))
-
-                                                        json.put(
-                                                            "userName",
-                                                            jo.getString("nickname")
-                                                        )
-                                                        json.put(
-                                                            "photo",
-                                                            jo.getString("cover")
-                                                        )
-                                                        json.put(
-                                                            "description",
-                                                            jo.getString("description")
-                                                        )
-                                                        fOut = FileOutputStream(file)
-                                                        fOut.write(
-                                                            json
-                                                                .toString()
-                                                                .toByteArray()
-                                                        )
-                                                        fOut.close()
-                                                        emitter.onNext("1")
-                                                    }
-                                                } catch (Ex: Exception) {
-                                                    emitter.onError(Ex)
-                                                }
-                                            }
-                                        }
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe({ t ->
-                                            if (t.equals("1")) {
-                                                setResult(1)
-                                                finish()
-                                            }
-                                        }, {
-                                            it.printStackTrace()
-                                            Toast
-                                                .makeText(
-                                                    baseContext,
-                                                    it.message,
-                                                    Toast.LENGTH_SHORT
-                                                )
-                                                .show()
-                                        }, {
-
-                                        })
+                                    //登录按钮点击事件
+                                    UserService
+                                        .Login(userName.value, password.value,this@Login, handler)
+                                        .start()
                                 }
                         ) {
                             Text(
@@ -250,15 +191,14 @@ class Login : AppCompatActivity() {
                         }
                         Spacer(modifier = Modifier.weight(1f))
                     }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Row {
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(text = errorText.value, color = Color.Red, fontSize = 23.sp)
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
                 }
             }
         }
-
-    }
-
-    @Preview(showBackground = true, showSystemUi = true)
-    @Composable
-    fun GreetingPreview() {
-        Greeting()
     }
 }
