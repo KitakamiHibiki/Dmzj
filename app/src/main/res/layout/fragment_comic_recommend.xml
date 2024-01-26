@@ -10,15 +10,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.viewpager2.widget.ViewPager2
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="200dp" />
 
-        <TextView
-            android:id="@+id/TT"
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/compose"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="123456" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </ScrollView>

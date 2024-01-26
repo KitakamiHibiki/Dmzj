@@ -11,6 +11,9 @@ import androidx.fragment.app.FragmentContainerView
 import app.android.dmzj.R
 import app.android.dmzj.fragment.ErrorFragment
 import app.android.dmzj.fragment.comic.ComicRecommendFragment
+import app.android.dmzj.fragment.novel.NovelRecommendFragment
+import app.android.dmzj.fragment.userInfo.UserInfoFragment
+import app.android.dmzj.service.Service
 import java.io.File
 
 class Main : AppCompatActivity() {
@@ -22,14 +25,18 @@ class Main : AppCompatActivity() {
     val CHANGE_FRAGMENT_TO_LIGHTBOOK = 102
     val CHANGE_FRAGMENT_TO_USERINFO = 103
     val CHANGE_FRAGMENT_TO_ERROR = 104
+    var nowFragment:Int = 0
+
     val handler:Handler = Handler(Handler.Callback { message: Message ->
         when(message.what){
             CHANGE_FRAGMENT_TO_COMIC-> {
+                if(nowFragment==0)return@Callback true
                 val ee = ComicRecommendFragment(this)
                 supportFragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(R.id.fragment_container_view,ee)
                     .commit()
+                nowFragment=0
             }
             CHANGE_FRAGMENT_TO_ERROR->{
                 val ee = ErrorFragment()
@@ -40,6 +47,24 @@ class Main : AppCompatActivity() {
                     .setReorderingAllowed(true)
                     .replace(R.id.fragment_container_view,ee)
                     .commit()
+            }
+            CHANGE_FRAGMENT_TO_LIGHTBOOK-> {
+                if(nowFragment==1)return@Callback true
+                val ee = NovelRecommendFragment()
+                supportFragmentManager.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.fragment_container_view,ee)
+                    .commit()
+                nowFragment=1
+            }
+            CHANGE_FRAGMENT_TO_USERINFO-> {
+                if(nowFragment==2)return@Callback true
+                val ee = UserInfoFragment()
+                supportFragmentManager.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.fragment_container_view,ee)
+                    .commit()
+                nowFragment=2
             }
         }
         return@Callback true
@@ -59,13 +84,25 @@ class Main : AppCompatActivity() {
         light_book = findViewById(R.id.light_book)
         userInfo = findViewById(R.id.userInfo)
 
+        //设置按钮单击事件
+        comic.setOnClickListener {
+            Service.sendMessage(handler,CHANGE_FRAGMENT_TO_COMIC,null)
+        }
+        light_book.setOnClickListener {
+            Service.sendMessage(handler,CHANGE_FRAGMENT_TO_LIGHTBOOK,null)
+        }
+        userInfo.setOnClickListener {
+            Service.sendMessage(handler,CHANGE_FRAGMENT_TO_USERINFO,null)
+        }
+
+        //启动comic Fragment
         if (savedInstanceState == null) {
             val ee = ComicRecommendFragment(this)
             supportFragmentManager.beginTransaction()
                 .setReorderingAllowed(true)
                 .add(R.id.fragment_container_view,ee)
                 .commit()
-            Log.i("asd",supportFragmentManager.fragments::class.java.name)
+            nowFragment=0
         }
     }
 }

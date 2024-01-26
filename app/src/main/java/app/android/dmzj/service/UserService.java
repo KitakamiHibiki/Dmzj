@@ -10,6 +10,8 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 import app.android.dmzj.request.WriteFiles;
 import app.android.dmzj.request.user.Request_UserKt;
 
@@ -44,6 +46,13 @@ public class UserService {
                     return;
                 }
                 WriteFiles.writeJson(jsonObject.toString(), activity.getFilesDir().getPath() + "/User.json");
+                //创建文件夹
+                //comic
+                //novel
+                //userInfo
+                new File(activity.getFilesDir().getPath()+"/comic").mkdir();
+                new File(activity.getFilesDir().getPath()+"/novel").mkdir();
+                new File(activity.getFilesDir().getPath()+"/userInfo").mkdir();
                 sendMessage(handler,10002,null);
             } catch (Exception e) {
                 e.printStackTrace();

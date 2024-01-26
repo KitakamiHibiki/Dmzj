@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">Dmzj</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="error_message_1">暂无内容显示</string>
+    <string name="comic_recommend_title_47">近期必看</string>
+    <string name="comic_recommend_title_48">火热专题</string>
+    <string name="comic_recommend_title_51">大师级作者怎能不看</string>
+    <string name="comic_recommend_title_52">国漫也精彩</string>
+    <string name="comic_recommend_title_53">美漫大事件</string>
+    <string name="comic_recommend_title_54">热门连载</string>
+    <string name="comic_recommend_title_55">条漫专区</string>
+    <string name="comic_recommend_title_56">最新上架</string>
 </resources>
