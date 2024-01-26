@@ -101,9 +101,13 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
             for(a in 0 until ja46.length()){
                 picList.add(ja46.getJSONObject(a))
             }
-            val adapter = ViewPagerAdapter(this.getContext(),picList)
+            val adapter =
+                ComicRecommendViewPagerAdapter(
+                    this.getContext(),
+                    picList
+                )
             isAlive=true
-            ViewPagerAdapter.setAdapter(viewPager,adapter)
+            ComicRecommendViewPagerAdapter.setAdapter(viewPager,adapter)
             thread_1(viewPager,selfHandler).start()
 
             Column {
@@ -568,6 +572,5 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
             }
         }
     }
-
 
 }

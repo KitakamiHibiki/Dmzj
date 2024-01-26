@@ -18,7 +18,7 @@ import java.util.List;
 import app.android.dmzj.R;
 import app.android.dmzj.request.WriteFiles;
 
-public class ViewPagerAdapter extends PagerAdapter {
+public class ComicRecommendViewPagerAdapter extends PagerAdapter {
     private final List<JSONObject> picUrl;
     private final LayoutInflater inflater;
     private final String basicPath;
@@ -27,7 +27,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         viewPager.setAdapter(pagerAdapter);
     }
 
-    public ViewPagerAdapter(Context context, List<JSONObject> list) {
+    public ComicRecommendViewPagerAdapter(Context context, List<JSONObject> list) {
         this.picUrl = list;
         inflater = LayoutInflater.from(context);
         basicPath = context.getFilesDir().getPath();

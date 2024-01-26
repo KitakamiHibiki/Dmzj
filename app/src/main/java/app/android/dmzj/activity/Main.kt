@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
@@ -12,7 +11,6 @@ import app.android.dmzj.R
 import app.android.dmzj.fragment.ErrorFragment
 import app.android.dmzj.fragment.comic.ComicRecommendFragment
 import app.android.dmzj.fragment.novel.NovelRecommendFragment
-import app.android.dmzj.fragment.userInfo.UserInfoFragment
 import app.android.dmzj.service.Service
 import java.io.File
 
@@ -36,6 +34,9 @@ class Main : AppCompatActivity() {
                     .setReorderingAllowed(true)
                     .replace(R.id.fragment_container_view,ee)
                     .commit()
+                comic.setImageResource(R.drawable.icon_comic_selected)
+                light_book.setImageResource(R.drawable.icon_elebook)
+                userInfo.setImageResource(R.drawable.icon_userinfo)
                 nowFragment=0
             }
             CHANGE_FRAGMENT_TO_ERROR->{
@@ -49,21 +50,27 @@ class Main : AppCompatActivity() {
                     .commit()
             }
             CHANGE_FRAGMENT_TO_LIGHTBOOK-> {
-                if(nowFragment==1)return@Callback true
+            if(nowFragment==1)return@Callback true
+            val ee = NovelRecommendFragment()
+            supportFragmentManager.beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.fragment_container_view,ee)
+                .commit()
+                comic.setImageResource(R.drawable.icon_comic)
+                light_book.setImageResource(R.drawable.icon_elebook_selected)
+                userInfo.setImageResource(R.drawable.icon_userinfo)
+            nowFragment=1
+        }
+            CHANGE_FRAGMENT_TO_USERINFO-> {
+                if(nowFragment==2)return@Callback true
                 val ee = NovelRecommendFragment()
                 supportFragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(R.id.fragment_container_view,ee)
                     .commit()
-                nowFragment=1
-            }
-            CHANGE_FRAGMENT_TO_USERINFO-> {
-                if(nowFragment==2)return@Callback true
-                val ee = UserInfoFragment()
-                supportFragmentManager.beginTransaction()
-                    .setReorderingAllowed(true)
-                    .replace(R.id.fragment_container_view,ee)
-                    .commit()
+                comic.setImageResource(R.drawable.icon_comic)
+                light_book.setImageResource(R.drawable.icon_elebook)
+                userInfo.setImageResource(R.drawable.icon_userinfo_selected)
                 nowFragment=2
             }
         }
@@ -103,6 +110,9 @@ class Main : AppCompatActivity() {
                 .add(R.id.fragment_container_view,ee)
                 .commit()
             nowFragment=0
+            comic.setImageResource(R.drawable.icon_comic_selected)
+            light_book.setImageResource(R.drawable.icon_elebook)
+            userInfo.setImageResource(R.drawable.icon_userinfo)
         }
     }
 }
