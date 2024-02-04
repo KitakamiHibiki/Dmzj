@@ -41,6 +41,9 @@ import org.json.JSONObject
 import java.util.ArrayList
 
 class ComicRecommendFragment(activity: Main) : Fragment() {
+    companion object{
+        var myIsAlive = false
+    }
     private val activity: Main
     private val handler: Handler
     private val selfHandler: Handler
@@ -48,7 +51,7 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
     private val REQUEST_COMMEND_SUCCESS = 102
     private val CHANGE_VIEWPAGER_ITEM = 103
     lateinit var composeView: ComposeView
-    lateinit var viewPager:ViewPager
+    lateinit var viewPager: ViewPager
     var context = mutableStateOf("")
     private lateinit var category_46: JSONObject
     private lateinit var category_47: JSONObject
@@ -59,7 +62,6 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
     private lateinit var category_54: JSONObject
     private lateinit var category_55: JSONObject
     private lateinit var category_56: JSONObject
-    var isAlive = false
 
     init {
         this.activity = activity
@@ -68,16 +70,18 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
             when (message.what) {
                 ERROR -> {
                     //异常
-                    Service.sendMessage(handler, activity.CHANGE_FRAGMENT_TO_ERROR, message.obj)
+                    Service.sendMessage(handler, Main.CHANGE_FRAGMENT_TO_ERROR, message.obj)
                 }
+
                 REQUEST_COMMEND_SUCCESS -> {
                     //获取完整Comic_Recommend成功
                     val a = message.obj.toString()
                     commendSplit(a)
                     context.value = a
                 }
-                CHANGE_VIEWPAGER_ITEM->{
-                    viewPager.currentItem = (viewPager.currentItem+1)%viewPager.adapter!!.count
+
+                CHANGE_VIEWPAGER_ITEM -> {
+                    viewPager.currentItem = (viewPager.currentItem + 1) % viewPager.adapter!!.count
                 }
             }
             return@Callback true
@@ -98,7 +102,7 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
                 return@setContent
             val ja46 = category_46.getJSONArray("data")
             val picList = ArrayList<JSONObject>()
-            for(a in 0 until ja46.length()){
+            for (a in 0 until ja46.length()) {
                 picList.add(ja46.getJSONObject(a))
             }
             val adapter =
@@ -106,9 +110,9 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
                     this.getContext(),
                     picList
                 )
-            isAlive=true
-            ComicRecommendViewPagerAdapter.setAdapter(viewPager,adapter)
-            thread_1(viewPager,selfHandler).start()
+            myIsAlive = true
+            ComicRecommendViewPagerAdapter.setAdapter(viewPager, adapter)
+            thread_1(viewPager, selfHandler).start()
 
             Column {
                 Surface(
@@ -153,8 +157,19 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
                                         contentScale = ContentScale.Crop
                                     )
                                 }
-                                Text(text = title, fontSize = 14.sp,maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                Text(text = sub_title, fontSize = 13.sp, color = Color.Gray,maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(
+                                    text = title,
+                                    fontSize = 14.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Text(
+                                    text = sub_title,
+                                    fontSize = 13.sp,
+                                    color = Color.Gray,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
                             Spacer(modifier = Modifier.weight(1f))
                             Column {
@@ -181,8 +196,19 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
                                         contentScale = ContentScale.Crop
                                     )
                                 }
-                                Text(text = title, fontSize = 14.sp,maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                Text(text = sub_title, fontSize = 13.sp, color = Color.Gray,maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(
+                                    text = title,
+                                    fontSize = 14.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Text(
+                                    text = sub_title,
+                                    fontSize = 13.sp,
+                                    color = Color.Gray,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
                             Spacer(modifier = Modifier.weight(1f))
                             Column {
@@ -209,8 +235,19 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
                                         contentScale = ContentScale.Crop
                                     )
                                 }
-                                Text(text = title, fontSize = 14.sp,maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                Text(text = sub_title, fontSize = 13.sp, color = Color.Gray,maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(
+                                    text = title,
+                                    fontSize = 14.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Text(
+                                    text = sub_title,
+                                    fontSize = 13.sp,
+                                    color = Color.Gray,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
                             Spacer(modifier = Modifier.weight(1f))
                         }
@@ -518,8 +555,14 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
                     contentScale = ContentScale.Crop
                 )
             }
-            Text(text = title, fontSize = 14.sp,maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(text = sub_title, fontSize = 13.sp, color = Color.Gray,maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = title, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                text = sub_title,
+                fontSize = 13.sp,
+                color = Color.Gray,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 
@@ -546,29 +589,35 @@ class ComicRecommendFragment(activity: Main) : Fragment() {
                     contentScale = ContentScale.Crop
                 )
             }
-            Text(text = title, fontSize = 14.sp,maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(text = authors, fontSize = 13.sp, color = Color.Gray,maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = title, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                text = authors,
+                fontSize = 13.sp,
+                color = Color.Gray,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 
     override fun onDestroy() {
-        isAlive=false
+        myIsAlive = false
         super.onDestroy()
     }
 
-    private class thread_1(viewPager: ViewPager,handler: Handler): Thread() {
-        val viewPager:ViewPager
-        val handler:Handler
+    private class thread_1(viewPager: ViewPager, handler: Handler) : Thread() {
+        val viewPager: ViewPager
+        val handler: Handler
 
         init {
-            this.viewPager=viewPager
+            this.viewPager = viewPager
             this.handler = handler
         }
 
         override fun run() {
-            while (isAlive) {
+            while (myIsAlive) {
                 sleep(3000)
-                Service.sendMessage(handler,103,null)
+                Service.sendMessage(handler, 103, null)
             }
         }
     }

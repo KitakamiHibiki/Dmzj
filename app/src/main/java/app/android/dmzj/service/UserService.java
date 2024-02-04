@@ -12,6 +12,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+import app.android.dmzj.fragment.userInfo.User;
+import app.android.dmzj.fragment.userInfo.UserProfile;
 import app.android.dmzj.request.WriteFiles;
 import app.android.dmzj.request.user.Request_UserKt;
 
@@ -53,6 +55,8 @@ public class UserService {
                 new File(activity.getFilesDir().getPath()+"/comic").mkdir();
                 new File(activity.getFilesDir().getPath()+"/novel").mkdir();
                 new File(activity.getFilesDir().getPath()+"/userInfo").mkdir();
+                User.CreateUser(activity);
+                UserProfile.writeToFile(Request_UserKt.getUserProfile(),activity.getFilesDir().getPath());
                 sendMessage(handler,10002,null);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -60,4 +64,6 @@ public class UserService {
             }
         }
     }
+
+
 }

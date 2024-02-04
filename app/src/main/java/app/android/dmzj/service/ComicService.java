@@ -8,6 +8,7 @@ import android.util.Log;
 
 import org.json.JSONArray;
 
+import app.android.dmzj.activity.Main;
 import app.android.dmzj.request.comic.Request_Comic;
 
 public class ComicService {
@@ -24,7 +25,8 @@ public class ComicService {
                 sendMessage(handler,102, new JSONArray(Request_Comic.requestComicRecommend()).toString());
             } catch (Exception e) {
                 e.printStackTrace();
-                sendMessage(handler, 101, "[" + e.getClass().getName() + "]" + e.getMessage());
+                if(Main.Companion.getNowFragment()==0)
+                    sendMessage(handler, 101, "[" + e.getClass().getName() + "]" + e.getMessage());
             }
         }
     }

@@ -2,6 +2,8 @@ package app.android.dmzj.request;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -9,10 +11,19 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
+import app.android.dmzj.fragment.userInfo.User;
+
 public class NetConnection {
 
     public static String getJson(String url, HashMap<String, String> parameters, HashMap<String, String> requestProperty) throws Exception {
         return new String(get(url, parameters, requestProperty), StandardCharsets.UTF_8);
+    }
+
+    public static String getJsonWithLogin(String url, @NonNull HashMap<String, String> parameters, HashMap<String, String> requestProperty)throws Exception{
+        if(User.isUserEmpty())
+            throw new Exception("User不存在，请登录");
+        parameters.put("uid",User.user.uid);
+        return getJson(url,parameters,requestProperty);
     }
 
     public static String postJson(String url, HashMap<String, String> parameters, HashMap<String, String> requestProperty) throws Exception {
@@ -77,7 +88,7 @@ public class NetConnection {
         return readFromInputStream(connection.getInputStream());
     }
 
-    public static byte[] readFromInputStream(InputStream inputStream) throws Exception{
+    public static byte[] readFromInputStream(@NonNull InputStream inputStream) throws Exception{
         int buffer_size = 1024;
         int len;
         byte[] bytes = new byte[buffer_size];

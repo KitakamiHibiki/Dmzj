@@ -3,6 +3,8 @@ package app.android.dmzj.request;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -14,14 +16,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class WriteFiles {
-    public static File writeJson(String content,String path) throws Exception{
+    @NonNull
+    public static File writeJson(String content, String path) throws Exception{
         File file = new File(path);
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         fileOutputStream.write(content.getBytes(StandardCharsets.UTF_8));
         return file;
     }
 
-    public static File writePictures(byte[] picBytes,String path)throws Exception{
+    @NonNull
+    public static File writePictures(byte[] picBytes, String path)throws Exception{
         File file = new File(path);
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         fileOutputStream.write(picBytes);
@@ -64,6 +68,5 @@ public class WriteFiles {
         thread.join();
         return BitmapFactory.decodeFile(path);
     }
-
 
 }

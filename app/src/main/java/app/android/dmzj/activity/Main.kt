@@ -11,20 +11,24 @@ import app.android.dmzj.R
 import app.android.dmzj.fragment.ErrorFragment
 import app.android.dmzj.fragment.comic.ComicRecommendFragment
 import app.android.dmzj.fragment.novel.NovelRecommendFragment
+import app.android.dmzj.fragment.userInfo.User
+import app.android.dmzj.fragment.userInfo.UserInfoFragment
+import app.android.dmzj.fragment.userInfo.UserProfile
 import app.android.dmzj.service.Service
-import java.io.File
 
 class Main : AppCompatActivity() {
+    companion object{
+        const val CHANGE_FRAGMENT_TO_COMIC = 101
+        const val CHANGE_FRAGMENT_TO_LIGHTBOOK = 102
+        const val CHANGE_FRAGMENT_TO_USERINFO = 103
+        const val CHANGE_FRAGMENT_TO_ERROR = 104
+        var nowFragment:Int = 0
+    }
+
     lateinit var fragmentContainerView: FragmentContainerView
     lateinit var comic: ImageButton
     lateinit var light_book: ImageButton
     lateinit var userInfo: ImageButton
-    val CHANGE_FRAGMENT_TO_COMIC = 101
-    val CHANGE_FRAGMENT_TO_LIGHTBOOK = 102
-    val CHANGE_FRAGMENT_TO_USERINFO = 103
-    val CHANGE_FRAGMENT_TO_ERROR = 104
-    var nowFragment:Int = 0
-
     val handler:Handler = Handler(Handler.Callback { message: Message ->
         when(message.what){
             CHANGE_FRAGMENT_TO_COMIC-> {
@@ -48,10 +52,11 @@ class Main : AppCompatActivity() {
                     .setReorderingAllowed(true)
                     .replace(R.id.fragment_container_view,ee)
                     .commit()
+                nowFragment = -1;
             }
             CHANGE_FRAGMENT_TO_LIGHTBOOK-> {
             if(nowFragment==1)return@Callback true
-            val ee = NovelRecommendFragment()
+            val ee = NovelRecommendFragment(this)
             supportFragmentManager.beginTransaction()
                 .setReorderingAllowed(true)
                 .replace(R.id.fragment_container_view,ee)
@@ -63,7 +68,7 @@ class Main : AppCompatActivity() {
         }
             CHANGE_FRAGMENT_TO_USERINFO-> {
                 if(nowFragment==2)return@Callback true
-                val ee = NovelRecommendFragment()
+                val ee = UserInfoFragment(this)
                 supportFragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(R.id.fragment_container_view,ee)
@@ -78,12 +83,16 @@ class Main : AppCompatActivity() {
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val loginFile = File(this.filesDir.path + "/User.json")
-        if (!loginFile.exists()) {
+        try {
+            User.CreateUser(this)
+            UserProfile.setProfile(filesDir.path)
+        }catch (exception:Exception){
+            exception.printStackTrace()
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
             this.finish()
         }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         fragmentContainerView = findViewById(R.id.fragment_container_view)
