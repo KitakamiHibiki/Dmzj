@@ -1,6 +1,5 @@
 package app.android.dmzj.fragment.userInfo
 
-import android.content.Context
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -57,7 +56,7 @@ class UserUI(val activity: Main) {
     fun UserInterFace() {
         var isComic by remember { mutableStateOf(true) }
         val mainScrollState = rememberScrollState()
-        var split = User.user.photo.split(".")
+        val split = User.user.photo.split(".")
         val userHeadImagePath =
             "${activity.filesDir.path}/userInfo/user_head.${split[split.size - 1]}"
         val comicAnimationState = animateDpAsState(
@@ -455,9 +454,37 @@ class UserUI(val activity: Main) {
                 .padding(horizontal = 10.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(8.dp))
         ) {
-            Row(modifier = Modifier
-                .padding(top = 5.dp, bottom = 5.dp)
-                .clickable { logout() }) {
+            Row(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)) {
+                Spacer(modifier = Modifier.width(20.dp))
+                Column {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.baseline_co_present_unclicked),
+                        contentDescription = null,
+                        modifier = Modifier.size(25.dp)
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "个人信息",
+                        fontSize = 23.sp
+                    )
+                }
+                Spacer(modifier = Modifier.width(0.dp))
+                Column {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(25.dp)
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+            }
+            Row(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp).clickable { logout() }) {
                 Spacer(modifier = Modifier.width(20.dp))
                 Column {
                     Spacer(modifier = Modifier.height(4.dp))
@@ -490,13 +517,13 @@ class UserUI(val activity: Main) {
         }
     }
 
-    fun logout() {
+    private fun logout() {
         //清除Userprofile.json
         UserProfile.deleteUserProfile(activity.filesDir.path)
         //清除User.json
         User.deleteUser(activity.filesDir.path)
         //跳转至Login_Activity
-        Service.startActivity(activity,Login::class.java)
+        Service.startActivity(activity, Login::class.java)
     }
 
 }
