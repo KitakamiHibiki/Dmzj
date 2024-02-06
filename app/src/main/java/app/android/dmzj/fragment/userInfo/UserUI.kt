@@ -191,7 +191,7 @@ class UserUI(val activity: Main) {
                     Service.startActivity(
                         activity,
                         ContentActivity::class.java,
-                        ContentActivity.TestCompose
+                        ContentActivity.ComicSubscribe
                     )
                 }
             ) {

@@ -12,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class WriteFiles {
@@ -67,6 +66,14 @@ public class WriteFiles {
         thread.start();
         thread.join();
         return BitmapFactory.decodeFile(path);
+    }
+
+    public static File writeJson(String data,String path,Boolean overwrite) throws Exception{
+        File file = new File(path);
+        if(file.exists())
+            if(!overwrite)
+                return file;
+        return writeJson(data,file.getPath());
     }
 
 }

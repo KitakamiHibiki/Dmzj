@@ -20,7 +20,7 @@ import app.android.dmzj.compose.Pager
 import app.android.dmzj.compose.comic.ComicCommentCompose
 import app.android.dmzj.compose.comic.ComicDownloadCompose
 import app.android.dmzj.compose.comic.ComicHistoryCompose
-import app.android.dmzj.compose.comic.ComicSubScribeCompose
+import app.android.dmzj.compose.comic.ComicSubscribeClass
 import app.android.dmzj.compose.novel.NovelCommentCompose
 import app.android.dmzj.compose.novel.NovelDownloadCompose
 import app.android.dmzj.compose.novel.NovelHistoryCompose
@@ -51,7 +51,7 @@ class ContentActivity : AppCompatActivity() {
         setContent {
             when (whichCompose) {
                 TestCompose -> Test()
-                ComicSubscribe -> ComicSubScribeCompose(activity = this)
+                ComicSubscribe -> ComicSubscribeClass(activity = this).ComicSubScribeCompose()
                 ComicHistory -> ComicHistoryCompose(activity = this)
                 ComicComment -> ComicCommentCompose(activity = this)
                 ComicDownLoad -> ComicDownloadCompose(activity = this)

@@ -56,6 +56,8 @@ public class NetConnection {
         HttpURLConnection connection = (HttpURLConnection) new URL(stringBuilder.toString()).openConnection();
         connection.setRequestMethod("GET");
         connection.setDoInput(true);
+        connection.setConnectTimeout(1000);
+        connection.setReadTimeout(1000);
         if (requestProperty!=null) {
             for (String a : requestProperty.keySet())
                 connection.setRequestProperty(a, requestProperty.get(a));
@@ -121,4 +123,5 @@ public class NetConnection {
         }
         return bytes;
     }
+
 }
