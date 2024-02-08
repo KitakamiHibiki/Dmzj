@@ -44,10 +44,13 @@ public class WriteFiles {
         }
         //网络获取
         Thread thread = new Thread(() -> {
-            try {
-                writePictures(NetConnection.getPictures(url,null,null),path);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            while (true) {
+                try {
+                    writePictures(NetConnection.getPictures(url, null, null), path);
+                    break;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         thread.start();
