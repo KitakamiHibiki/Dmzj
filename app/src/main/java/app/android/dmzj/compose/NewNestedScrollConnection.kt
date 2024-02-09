@@ -248,7 +248,7 @@ fun BottomBox(state: RefreshState, text: String, modifier: Modifier = Modifier) 
 //继承NestedScrollConnection，滚动控制
 class RefreshNestedScrollConnection(
     private val scrollState: ScrollState,
-    private val state: RefreshState,
+    private val state: RefreshState
 ) : NestedScrollConnection {
     //从屏幕中松手后的数据处理
     override suspend fun onPreFling(available: Velocity): Velocity {

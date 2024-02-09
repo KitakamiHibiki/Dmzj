@@ -51,7 +51,7 @@ class ContentActivity : AppCompatActivity() {
         setContent {
             when (whichCompose) {
                 TestCompose -> Test()
-                ComicSubscribe -> ComicSubscribeClass(activity_ = this).ComicSubScribeCompose()
+                ComicSubscribe -> ComicSubscribeClass(activity = this).ComicSubScribeCompose()
                 ComicHistory -> ComicHistoryCompose(activity = this)
                 ComicComment -> ComicCommentCompose(activity = this)
                 ComicDownLoad -> ComicDownloadCompose(activity = this)
