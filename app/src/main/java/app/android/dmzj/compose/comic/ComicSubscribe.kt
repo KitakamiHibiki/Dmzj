@@ -1,6 +1,7 @@
 package app.android.dmzj.compose.comic
 
 import android.app.Activity
+import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,6 +24,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,8 +46,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.android.dmzj.R
+import app.android.dmzj.activity.ContentActivity
 import app.android.dmzj.request.WriteFiles
 import app.android.dmzj.request.user.comicSubscribes
+import app.android.dmzj.service.Service
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
@@ -68,23 +73,27 @@ class ComicSubscribeClass(val activity: Activity) {
     @Composable
     fun ComicSubScribeCompose() {
         val state = this.state()
-        var refreshing by remember{ mutableStateOf(false) }
+        var refreshing by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
         val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = {
             scope.launch {
-                refreshing=true
+                refreshing = true
                 reset()
                 addIntoList(loadNextPage())
-                refreshing=false
+                refreshing = false
             }
         })
 
         Column {
             TopBar("漫画订阅", activity)
-            Box(Modifier.pullRefresh(pullRefreshState)){
+            Box(Modifier.pullRefresh(pullRefreshState)) {
                 DataShow(list = list, activity, state)
-                if(state.isScrollInProgress&&state.firstVisibleItemScrollOffset==0)
-                    PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
+                if (state.isScrollInProgress && state.firstVisibleItemScrollOffset == 0)
+                    PullRefreshIndicator(
+                        refreshing,
+                        pullRefreshState,
+                        Modifier.align(Alignment.TopCenter)
+                    )
             }
         }
 
@@ -125,6 +134,7 @@ class ComicSubscribeClass(val activity: Activity) {
 
 private class LoadThread(val comicSubscribe: ComicSubscribeClass, val state: LazyGridState) :
     Runnable {
+    @OptIn(InternalCoroutinesApi::class)
     override fun run() {
         val kClass = state.javaClass
         val fields = kClass.declaredFields
@@ -134,7 +144,9 @@ private class LoadThread(val comicSubscribe: ComicSubscribeClass, val state: Laz
                     field.isAccessible = true
                     if (field.name == "canScrollBackward") {
                         if (field.get(state) == true)
-                            comicSubscribe.addIntoList(comicSubscribe.loadNextPage())
+                            kotlinx.coroutines.internal.synchronized(comicSubscribe) {
+                                comicSubscribe.addIntoList(comicSubscribe.loadNextPage())
+                            }
                         break
                     }
                 }
@@ -194,18 +206,19 @@ fun DataShow(
     context: Activity,
     state: LazyGridState,
 ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            state = state,
-            modifier = Modifier
-                .padding(10.dp)
-        ) {
-            items(list.size) { index ->
-                DataCard(data = list[index], context)
-            }
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        state = state,
+        modifier = Modifier
+            .padding(10.dp)
+    ) {
+        items(list.size) { index ->
+            DataCard(data = list[index], context)
         }
+    }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataCard(data: JSONObject, context: Activity) {
     val split = data.getString("sub_img").split(".")
@@ -216,7 +229,17 @@ fun DataCard(data: JSONObject, context: Activity) {
             .width(120.dp)
             .height(200.dp)
             .padding(horizontal = 5.dp, vertical = 10.dp),
-        shadowElevation = 2.dp
+        shadowElevation = 2.dp,
+        onClick = {
+            val bundle = Bundle()
+            bundle.putString("Comic_Id", data.getString("id"))
+            Service.startActivity(
+                context,
+                ContentActivity::class.java,
+                ContentActivity.ComicDetail,
+                bundle
+            )
+        }
     ) {
         Column {
             Box(modifier = Modifier.weight(1f)) {

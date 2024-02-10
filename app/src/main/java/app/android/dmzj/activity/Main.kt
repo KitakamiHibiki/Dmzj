@@ -83,6 +83,7 @@ class Main : AppCompatActivity() {
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         try {
             User.CreateUser(this)
             UserProfile.setProfile(filesDir.path)
@@ -92,8 +93,6 @@ class Main : AppCompatActivity() {
             startActivity(intent)
             this.finish()
         }
-
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         fragmentContainerView = findViewById(R.id.fragment_container_view)
         comic = findViewById(R.id.comic)

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import app.android.dmzj.R
 import app.android.dmzj.compose.Pager
 import app.android.dmzj.compose.comic.ComicCommentCompose
+import app.android.dmzj.compose.comic.ComicDetail
 import app.android.dmzj.compose.comic.ComicDownloadCompose
 import app.android.dmzj.compose.comic.ComicHistoryCompose
 import app.android.dmzj.compose.comic.ComicSubscribeClass
@@ -38,6 +39,7 @@ class ContentActivity : AppCompatActivity() {
         const val ComicHistory = Comic + "2"
         const val ComicComment = Comic + "3"
         const val ComicDownLoad = Comic + "4"
+        const val ComicDetail = Comic + "5"
         const val NovelSubscribe = Novel + "1"
         const val NovelHistory = Novel + "2"
         const val NovelComment = Novel + "3"
@@ -55,6 +57,7 @@ class ContentActivity : AppCompatActivity() {
                 ComicHistory -> ComicHistoryCompose(activity = this)
                 ComicComment -> ComicCommentCompose(activity = this)
                 ComicDownLoad -> ComicDownloadCompose(activity = this)
+                ComicDetail -> ComicDetail(activity = this).ComicDetailCompose()
                 NovelSubscribe -> NovelSubScribeCompose(activity = this)
                 NovelHistory -> NovelHistoryCompose(activity = this)
                 NovelComment -> NovelCommentCompose(activity = this)
