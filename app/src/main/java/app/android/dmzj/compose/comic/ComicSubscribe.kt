@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 
-class ComicSubscribeClass(val activity: Activity) {
+class ComicSubscribe(val activity: Activity) {
     var nowPage = -1
     var list = mutableStateListOf<JSONObject>()
     var onLoad = false
@@ -99,7 +99,7 @@ class ComicSubscribeClass(val activity: Activity) {
 
         LaunchedEffect(isThreadAlive.value) {
             if (!isThreadAlive.value) {
-                Thread(LoadThread(this@ComicSubscribeClass, state)).start()
+                Thread(LoadThread(this@ComicSubscribe, state)).start()
                 isThreadAlive.value = true
             }
         }
@@ -132,7 +132,7 @@ class ComicSubscribeClass(val activity: Activity) {
     }
 }
 
-private class LoadThread(val comicSubscribe: ComicSubscribeClass, val state: LazyGridState) :
+private class LoadThread(val comicSubscribe: ComicSubscribe, val state: LazyGridState) :
     Runnable {
     @OptIn(InternalCoroutinesApi::class)
     override fun run() {

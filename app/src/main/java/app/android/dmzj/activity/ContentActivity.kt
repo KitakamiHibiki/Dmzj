@@ -21,11 +21,11 @@ import app.android.dmzj.compose.comic.ComicCommentCompose
 import app.android.dmzj.compose.comic.ComicDetail
 import app.android.dmzj.compose.comic.ComicDownloadCompose
 import app.android.dmzj.compose.comic.ComicHistoryCompose
-import app.android.dmzj.compose.comic.ComicSubscribeClass
+import app.android.dmzj.compose.comic.ComicSubscribe
 import app.android.dmzj.compose.novel.NovelCommentCompose
 import app.android.dmzj.compose.novel.NovelDownloadCompose
 import app.android.dmzj.compose.novel.NovelHistoryCompose
-import app.android.dmzj.compose.novel.NovelSubScribeCompose
+import app.android.dmzj.compose.novel.NovelSubscribe
 import kotlinx.coroutines.launch
 import java.util.ArrayList
 
@@ -53,12 +53,12 @@ class ContentActivity : AppCompatActivity() {
         setContent {
             when (whichCompose) {
                 TestCompose -> Test()
-                ComicSubscribe -> ComicSubscribeClass(activity = this).ComicSubScribeCompose()
+                ComicSubscribe -> ComicSubscribe(activity = this).ComicSubScribeCompose()
                 ComicHistory -> ComicHistoryCompose(activity = this)
                 ComicComment -> ComicCommentCompose(activity = this)
                 ComicDownLoad -> ComicDownloadCompose(activity = this)
                 ComicDetail -> ComicDetail(activity = this).ComicDetailCompose()
-                NovelSubscribe -> NovelSubScribeCompose(activity = this)
+                NovelSubscribe -> NovelSubscribe(activity = this).NovelSubScribeCompose()
                 NovelHistory -> NovelHistoryCompose(activity = this)
                 NovelComment -> NovelCommentCompose(activity = this)
                 NovelDownload -> NovelDownloadCompose(activity = this)

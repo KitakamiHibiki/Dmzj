@@ -324,7 +324,7 @@ class UserUI(val activity: Main) {
                 .padding(horizontal = 10.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(8.dp))
         ) {
-            Row(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)) {
+            Row(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp).clickable { Service.startActivity(activity,ContentActivity::class.java,ContentActivity.NovelSubscribe) }) {
                 Spacer(modifier = Modifier.width(20.dp))
                 Column {
                     Spacer(modifier = Modifier.height(4.dp))

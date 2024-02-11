@@ -13,13 +13,9 @@ import app.android.dmzj.request.comic.Request_Comic
 import kotlinx.coroutines.InternalCoroutinesApi
 
 class ComicDetail(val activity: Activity) {
-    val bundle: Bundle
+    val bundle: Bundle = activity.intent.getBundleExtra("data")!!.getBundle("prams")!!
     val Data = mutableStateOf("")
     val isInit = mutableStateOf(false)
-
-    init {
-        bundle = activity.intent.getBundleExtra("data")!!.getBundle("prams")!!
-    }
 
     @Composable
     fun ComicDetailCompose() {
@@ -29,13 +25,13 @@ class ComicDetail(val activity: Activity) {
             Text(text = Data.value)
         }
         LaunchedEffect(isInit.value){
-            loadData(bundle.getString("Comic_Id")!!, Data).start()
+            LoadData(bundle.getString("Comic_Id")!!, Data).start()
             isInit.value=true
         }
     }
 }
 
-private class loadData(val comic_id: String, val data: MutableState<String>) : Thread() {
+private class LoadData(val comic_id: String, val data: MutableState<String>) : Thread() {
     @OptIn(InternalCoroutinesApi::class)
     override fun run() {
         kotlinx.coroutines.internal.synchronized(data) {
