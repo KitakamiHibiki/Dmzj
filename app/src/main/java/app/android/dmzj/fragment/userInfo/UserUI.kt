@@ -324,7 +324,16 @@ class UserUI(val activity: Main) {
                 .padding(horizontal = 10.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(8.dp))
         ) {
-            Row(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp).clickable { Service.startActivity(activity,ContentActivity::class.java,ContentActivity.NovelSubscribe) }) {
+            Row(
+                modifier = Modifier
+                    .padding(top = 5.dp, bottom = 5.dp)
+                    .clickable {
+                        Service.startActivity(
+                            activity,
+                            ContentActivity::class.java,
+                            ContentActivity.NovelSubscribe
+                        )
+                    }) {
                 Spacer(modifier = Modifier.width(20.dp))
                 Column {
                     Spacer(modifier = Modifier.height(4.dp))
@@ -484,7 +493,9 @@ class UserUI(val activity: Main) {
                 }
                 Spacer(modifier = Modifier.width(10.dp))
             }
-            Row(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp).clickable { logout() }) {
+            Row(modifier = Modifier
+                .padding(top = 5.dp, bottom = 5.dp)
+                .clickable { logout() }) {
                 Spacer(modifier = Modifier.width(20.dp))
                 Column {
                     Spacer(modifier = Modifier.height(4.dp))
